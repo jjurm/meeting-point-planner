@@ -40,7 +40,7 @@
     <dependency>
       <groupId>joda-time</groupId>
       <artifactId>joda-time</artifactId>
-      <version>2.9.6</version>
+      <version>2.9.9</version>
     </dependency>
     <!-- https://mvnrepository.com/artifact/com.google.maps/google-maps-services -->
     <dependency>
@@ -53,7 +53,12 @@
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
       <version>6.0.6</version>
-      <!-- <version>5.1.39</version> -->
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/com.peertopark.java/geocalc -->
+    <dependency>
+      <groupId>com.peertopark.java</groupId>
+      <artifactId>geocalc</artifactId>
+      <version>1.0.3</version>
     </dependency>
   </dependencies>
 

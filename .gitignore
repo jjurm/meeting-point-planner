@@ -68,3 +68,7 @@ local.properties
 
 # STS (Spring Tool Suite)
 .springBeans
+
+
+# === Project-related ===
+ApiKey.txt
