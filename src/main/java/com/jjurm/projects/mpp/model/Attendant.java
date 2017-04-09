@@ -17,4 +17,9 @@ public class Attendant {
     return origin;
   }
 
+  @Override
+  public String toString() {
+    return "Attendant from " + origin;
+  }
+
 }
