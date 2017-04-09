@@ -5,7 +5,7 @@ import java.util.Date;
 import com.jjurm.projects.mpp.model.Attendant;
 import com.jjurm.projects.mpp.model.Place;
 
-public class JetLagMap extends AttendantProductivityMap {
+public class JetLagMap extends ProductivityMap {
 
   static double E = 0.7;
 
@@ -19,13 +19,12 @@ public class JetLagMap extends AttendantProductivityMap {
     int offset2 = destination.getTimeZone().getOffset(date.getTime());
     double hourDiff = (offset2 - offset1) / 3600000;
 
-    if (hourDiff == 0)
-      return 0;
-
     boolean toEast = hourDiff > 0;
     double dayCoefficient = toEast ? 2 : 2.5;
-    return 1
+    double productivity = 1
         - Math.pow(Math.max(0, Math.abs(hourDiff) - dayCoefficient * (day - 1)) / 12, 2) * (1 - E);
+
+    return productivity;
   }
 
 }
