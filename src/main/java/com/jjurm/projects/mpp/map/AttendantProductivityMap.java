@@ -1,5 +1,7 @@
 package com.jjurm.projects.mpp.map;
 
+import java.util.Date;
+
 import com.jjurm.projects.mpp.model.Attendant;
 
 /**
@@ -9,9 +11,11 @@ import com.jjurm.projects.mpp.model.Attendant;
  */
 public abstract class AttendantProductivityMap implements ProductivityMap {
 
+  protected Date date;
   protected Attendant attendant;
 
-  public AttendantProductivityMap(Attendant attendant) {
+  public AttendantProductivityMap(Date date, Attendant attendant) {
+    this.date = date;
     this.attendant = attendant;
   }
 

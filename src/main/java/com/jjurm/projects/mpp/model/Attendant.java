@@ -1,7 +1,5 @@
 package com.jjurm.projects.mpp.model;
 
-import com.peertopark.java.geocalc.Point;
-
 /**
  * A class representing a person going to participate in the meeting.
  * 
@@ -9,13 +7,13 @@ import com.peertopark.java.geocalc.Point;
  */
 public class Attendant {
 
-  private Point origin;
+  private Place origin;
 
-  public Attendant(Point origin) {
+  public Attendant(Place origin) {
     this.origin = origin;
   }
 
-  public Point getOrigin() {
+  public Place getOrigin() {
     return origin;
   }
 

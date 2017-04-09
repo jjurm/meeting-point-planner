@@ -1,6 +1,6 @@
 package com.jjurm.projects.mpp.map;
 
-import com.jjurm.projects.mpp.model.Destination;
+import com.jjurm.projects.mpp.model.Place;
 
 /**
  * This interfaces represents a function that basically takes coordinates as an argument and returns
@@ -15,6 +15,6 @@ public interface ProductivityMap {
    * Returns productivity given a specified destination and a day. The 0-th day is the day of
    * arrival and the meeting days are from 1 to 3 (inclusive).
    */
-  public double calculateProductivity(Destination destination, int day);
+  public double calculateProductivity(Place destination, int day);
 
 }
