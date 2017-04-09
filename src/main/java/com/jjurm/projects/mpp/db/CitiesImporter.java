@@ -17,7 +17,7 @@ import com.google.maps.TimeZoneApi;
 import com.google.maps.errors.ApiException;
 import com.google.maps.errors.ZeroResultsException;
 import com.google.maps.model.LatLng;
-import com.jjurm.projects.mpp.map.ApiManager;
+import com.jjurm.projects.mpp.ApiManager;
 
 public class CitiesImporter {
 
