@@ -8,7 +8,7 @@ import com.peertopark.java.geocalc.EarthCalc;
 
 public class DistanceMap extends ProductivityMap {
 
-  static double K = 6.1;
+  public static final double K = 6.1;
 
   public DistanceMap(Date date, Attendant attendant) {
     super(date, attendant);

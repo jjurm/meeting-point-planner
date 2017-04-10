@@ -12,7 +12,7 @@ import com.jjurm.projects.mpp.model.Place;
  */
 public class IsHomeMap extends ProductivityMap {
 
-  private static final double E = 0.99;
+  public static final double E = 0.99;
 
   public IsHomeMap(Date date, Attendant attendant) {
     super(date, attendant);

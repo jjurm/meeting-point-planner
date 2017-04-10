@@ -8,9 +8,10 @@ public class ProductivityMapsFactory {
 
   // @formatter:off
   private static Factory[] factories = {
-    JetLagMap::new,
-    DistanceMap::new,
-    IsHomeMap::new,
+      AltitudeMap::new,
+      DistanceMap::new,
+      //IsHomeMap::new,
+      JetLagMap::new,
   };
   // @formatter:on
 
