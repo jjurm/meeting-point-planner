@@ -71,5 +71,5 @@ local.properties
 
 
 # === Project-related ===
-ApiKey.txt
-cities.csv
+*ApiKey.txt
+*.csv

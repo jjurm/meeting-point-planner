@@ -16,7 +16,7 @@ public class DatabaseManager {
     pool = new ConnectionPool("pool", 3, 3, 1000, URL, null);
   }
 
-  public static void release() throws SQLException {
+  public static void release() {
     pool.release();
   }
 
