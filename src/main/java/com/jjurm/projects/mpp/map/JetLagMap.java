@@ -7,8 +7,10 @@ import com.jjurm.projects.mpp.model.Place;
 
 public class JetLagMap extends ProductivityMap {
 
-  public static final double E_EAST = 0.65;
-  public static final double E_WEST = 0.75;
+  public static final double PM = 0.7;
+
+  public static final double LE = 0.7;
+  public static final double LW = 0.7;
 
   public JetLagMap(Date date, Attendant attendant) {
     super(date, attendant);
@@ -16,6 +18,9 @@ public class JetLagMap extends ProductivityMap {
 
   @Override
   public double calculateProductivity(Place destination, int day) {
+    double pw = PM * Math.sqrt(LE / LW);
+    double pe = PM * Math.sqrt(LW / LE);
+
     int offset1 = attendant.getOrigin().getTimeZone().getOffset(date.getTime());
     int offset2 = destination.getTimeZone().getOffset(date.getTime());
     double hourDiff = (offset2 - offset1) / 3600000;
@@ -24,12 +29,14 @@ public class JetLagMap extends ProductivityMap {
     hourDiff = Math.abs(hourDiff);
 
     double dayCoefficient1 = toEast ? 2 : 2.5;
-    double productivity1 = 1 - Math.pow(Math.max(0, hourDiff - dayCoefficient1 * (day - 1)) / 12, 2)
-        * (1 - (toEast ? E_EAST : E_WEST));
+    double p1 = toEast ? pe : pw;
+    double productivity1 =
+        1 - Math.pow(Math.max(0, hourDiff - dayCoefficient1 * (day - 1)) / 12, 2) * (1 - p1);
 
     double dayCoefficient2 = !toEast ? 2 : 2.5;
-    double productivity2 = 1 - Math.pow(Math.max(0, hourDiff - dayCoefficient2 * (day - 1)) / 12, 2)
-        * (1 - (!toEast ? E_EAST : E_WEST));
+    double p2 = !toEast ? pe : pw;
+    double productivity2 =
+        1 - Math.pow(Math.max(0, hourDiff - dayCoefficient2 * (day - 1)) / 12, 2) * (1 - p2);
 
     return Math.max(productivity1, productivity2);
   }

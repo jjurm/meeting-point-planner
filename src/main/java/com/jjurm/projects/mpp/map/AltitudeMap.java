@@ -16,6 +16,10 @@ public class AltitudeMap extends ProductivityMap {
   public static final double M = 0.0289644;
   public static final double R = 8.31447;
 
+  public static final double a = 3.995;
+  public static final double b = 0.7576;
+  public static final double c = 14.05537;
+
   public AltitudeMap(Date date, Attendant attendant) {
     super(date, attendant);
   }
@@ -23,7 +27,13 @@ public class AltitudeMap extends ProductivityMap {
   @Override
   public double calculateProductivity(Place destination, int day) {
     int h = destination.getAltitude();
-    return K * M * p0 * Math.pow(1 - (L * h) / T0, (g * M) / (R * L)) / (R * (T0 - L * h));
+
+    double g0 = Math.log(M * p0 / (R * T0) - b) / Math.log(a) + c;
+    double gh =
+        Math.log((M * p0 * Math.pow(1 - L * h / T0, g * M / (R * L))) / (R * (T0 - L * h)) - b)
+            / Math.log(a) + c;
+
+    return gh / g0;
   }
 
 }

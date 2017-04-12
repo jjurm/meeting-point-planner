@@ -8,7 +8,12 @@ import com.peertopark.java.geocalc.EarthCalc;
 
 public class DistanceMap extends ProductivityMap {
 
-  public static final double K = 6.1;
+  public static final double PY = 0.9;
+  public static final double PE = 0.7;
+
+  public static final double AGE_YOUNG = 18;
+  public static final double AGE_ELDERLY = 80;
+  public static final double MAX_DISTANCE = 20_000_000;
 
   public DistanceMap(Date date, Attendant attendant) {
     super(date, attendant);
@@ -16,12 +21,14 @@ public class DistanceMap extends ProductivityMap {
 
   @Override
   public double calculateProductivity(Place destination, int day) {
+    if (day > 1)
+      return 1;
+
     double distance =
         EarthCalc.getHarvesineDistance(attendant.getOrigin().getPoint(), destination.getPoint());
-    if (day == 1) {
-      return Math.pow(10, -K * distance / 1000 / Math.pow(10, K));
-    } else {
-      return 1;
-    }
+
+    double PM = PY - (attendant.getAge() - AGE_YOUNG) / (AGE_ELDERLY - AGE_YOUNG) * (PY - PE);
+
+    return Math.exp(distance * Math.log(PM) / MAX_DISTANCE);
   }
 }

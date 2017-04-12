@@ -8,13 +8,19 @@ package com.jjurm.projects.mpp.model;
 public class Attendant {
 
   private Place origin;
+  private double age;
 
-  public Attendant(Place origin) {
+  public Attendant(Place origin, double age) {
     this.origin = origin;
+    this.age = age;
   }
 
   public Place getOrigin() {
     return origin;
+  }
+
+  public double getAge() {
+    return age;
   }
 
   @Override

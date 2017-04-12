@@ -11,13 +11,18 @@ public class Place {
   private Point point;
   private TimeZone timeZone;
   private int altitude;
+  private double[] temperature;
+  private double[] precipitation;
 
-  Place(int id, String name, Point point, TimeZone timeZone, int altitude) {
+  public Place(int id, String name, Point point, TimeZone timeZone, int altitude,
+      double[] temperature, double[] precipitation) {
     this.id = id;
     this.name = name;
     this.point = point;
     this.timeZone = timeZone;
     this.altitude = altitude;
+    this.temperature = temperature;
+    this.precipitation = precipitation;
   }
 
   public int getId() {
@@ -34,6 +39,14 @@ public class Place {
 
   public int getAltitude() {
     return altitude;
+  }
+
+  public double[] getTemperature() {
+    return temperature;
+  }
+
+  public double[] getPrecipitation() {
+    return precipitation;
   }
 
   @Override

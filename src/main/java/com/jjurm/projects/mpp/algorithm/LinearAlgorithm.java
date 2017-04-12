@@ -9,11 +9,11 @@ import java.util.Date;
 import java.util.TreeSet;
 
 import com.jjurm.projects.mpp.db.DatabaseManager;
+import com.jjurm.projects.mpp.db.PlaceFinder;
 import com.jjurm.projects.mpp.map.ProductivityMap;
 import com.jjurm.projects.mpp.map.ProductivityMapsFactory;
 import com.jjurm.projects.mpp.model.Attendant;
 import com.jjurm.projects.mpp.model.Place;
-import com.jjurm.projects.mpp.model.PlaceFinder;
 
 public class LinearAlgorithm extends Algorithm {
 
