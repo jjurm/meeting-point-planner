@@ -3,11 +3,10 @@ package com.jjurm.projects.mpp.map;
 import java.util.Date;
 
 import com.jjurm.projects.mpp.model.Attendant;
+import com.jjurm.projects.mpp.model.Parameters.ParametersList;
 import com.jjurm.projects.mpp.model.Place;
 
 public class AltitudeMap extends ProductivityMap {
-
-  public static final double K = 13;
 
   public static final double T0 = 288.15;
   public static final double L = 0.0065;
@@ -20,8 +19,8 @@ public class AltitudeMap extends ProductivityMap {
   public static final double b = 0.7576;
   public static final double c = 14.05537;
 
-  public AltitudeMap(Date date, Attendant attendant) {
-    super(date, attendant);
+  public AltitudeMap(ParametersList parameters, Date date, Attendant attendant) {
+    super(parameters, date, attendant);
   }
 
   @Override

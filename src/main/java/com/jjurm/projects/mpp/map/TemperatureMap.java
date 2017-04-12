@@ -4,11 +4,12 @@ import java.util.Calendar;
 import java.util.Date;
 
 import com.jjurm.projects.mpp.model.Attendant;
+import com.jjurm.projects.mpp.model.Parameters.ParametersList;
 import com.jjurm.projects.mpp.model.Place;
 
 public class TemperatureMap extends ProductivityMap {
 
-  public static final double KT = 0.05;
+  public static final String PARAM_KT = "KT";
 
   public static final double c1 = -42.379;
   public static final double c2 = 2.04901523;
@@ -20,8 +21,8 @@ public class TemperatureMap extends ProductivityMap {
   public static final double c8 = 8.5280 * Math.pow(10, -4);
   public static final double c9 = -1.99 * Math.pow(10, -6);
 
-  public TemperatureMap(Date date, Attendant attendant) {
-    super(date, attendant);
+  public TemperatureMap(ParametersList parameters, Date date, Attendant attendant) {
+    super(parameters, date, attendant);
   }
 
   @Override
@@ -40,9 +41,9 @@ public class TemperatureMap extends ProductivityMap {
     return P;
   }
 
-  public static double productivityInTemperature(double t) {
+  public double productivityInTemperature(double t) {
     return ((-1.06907 * Math.pow(10, -7) * Math.pow(t, 4) + 0.00003 * Math.pow(t, 3)
-        - 0.00344 * Math.pow(t, 2) + 0.11109 * t - 0.08269) - 1) * KT + 1;
+        - 0.00344 * Math.pow(t, 2) + 0.11109 * t - 0.08269) - 1) * parameters.get(PARAM_KT) + 1;
   }
 
   public static double celsiusToFahrenheit(double v) {

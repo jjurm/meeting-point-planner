@@ -5,18 +5,20 @@ import java.util.Date;
 
 import com.jjurm.projects.mpp.db.QueryCache;
 import com.jjurm.projects.mpp.model.Attendant;
+import com.jjurm.projects.mpp.model.Parameters.ParametersList;
 import com.jjurm.projects.mpp.model.Place;
 
 public class DaylightMap extends ProductivityMap {
 
   public static final double D = 100.0 / 121.0;
-  public static final double WORKING_HOURS = 16;
+
+  public static final String PARAM_WH = "WH";
 
   public static QueryCache<Integer, Double> cache = new QueryCache<Integer, Double>(
       day -> "SELECT declination FROM sundeclination WHERE `day` = " + day, rs -> rs.getDouble(1));
 
-  public DaylightMap(Date date, Attendant attendant) {
-    super(date, attendant);
+  public DaylightMap(ParametersList parameters, Date date, Attendant attendant) {
+    super(parameters, date, attendant);
   }
 
   @Override
@@ -32,7 +34,8 @@ public class DaylightMap extends ProductivityMap {
     double sunrise = 24 * -h + 12;
     double sunset = 24 * h + 12;
 
-    double RL = Math.max(0, -sunset + sunrise + WORKING_HOURS) / WORKING_HOURS;
+    double wh = parameters.get(PARAM_WH);
+    double RL = Math.max(0, -sunset + sunrise + wh) / wh;
 
     double P = RL * D + (1 - RL);
     return P;

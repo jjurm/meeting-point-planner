@@ -3,6 +3,7 @@ package com.jjurm.projects.mpp.map;
 import java.util.Date;
 
 import com.jjurm.projects.mpp.model.Attendant;
+import com.jjurm.projects.mpp.model.Parameters.ParametersList;
 import com.jjurm.projects.mpp.model.Place;
 
 /**
@@ -12,15 +13,15 @@ import com.jjurm.projects.mpp.model.Place;
  */
 public class IsHomeMap extends ProductivityMap {
 
-  public static final double E = 0.99;
+  public static final String PARAM_P = "P";
 
-  public IsHomeMap(Date date, Attendant attendant) {
-    super(date, attendant);
+  public IsHomeMap(ParametersList parameters, Date date, Attendant attendant) {
+    super(parameters, date, attendant);
   }
 
   @Override
   public double calculateProductivity(Place destination, int day) {
-    return attendant.getOrigin().equals(destination) ? 1 : E;
+    return attendant.getOrigin().equals(destination) ? 1 : parameters.get(PARAM_P);
   }
 
 }

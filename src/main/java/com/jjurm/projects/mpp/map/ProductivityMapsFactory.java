@@ -1,33 +1,56 @@
 package com.jjurm.projects.mpp.map;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 import com.jjurm.projects.mpp.model.Attendant;
+import com.jjurm.projects.mpp.model.Parameters;
+import com.jjurm.projects.mpp.model.Parameters.ParametersList;
 
 public class ProductivityMapsFactory {
 
-  // @formatter:off
-  private static Factory[] factories = {
-      AltitudeMap::new,
-      DaylightMap::new,
-      DistanceMap::new,
-      //IsHomeMap::new,
-      JetLagMap::new,
-      TemperatureMap::new,
-  };
-  // @formatter:on
+  private static HashMap<Class<? extends ProductivityMap>, Factory> allFactories =
+      new HashMap<Class<? extends ProductivityMap>, Factory>() {
+        private static final long serialVersionUID = 1L;
+        {
+          put(AltitudeMap.class, AltitudeMap::new);
+          put(DaylightMap.class, DaylightMap::new);
+          put(DistanceMap.class, DistanceMap::new);
+          put(IsHomeMap.class, IsHomeMap::new);
+          put(JetLagMap.class, JetLagMap::new);
+          put(TemperatureMap.class, TemperatureMap::new);
+        }
+      };
 
-  public static ProductivityMap[] produce(Date date, Attendant attendant) {
-    ProductivityMap[] maps = new ProductivityMap[factories.length];
-    for (int i = 0; i < factories.length; i++) {
-      maps[i] = factories[i].construct(date, attendant);
+
+  List<Class<? extends ProductivityMap>> classes =
+      new ArrayList<Class<? extends ProductivityMap>>();
+  Parameters parameters;
+
+  public ProductivityMapsFactory(Parameters parameters) {
+    this.parameters = parameters;
+  }
+
+  public void addFactory(Class<? extends ProductivityMap> clazz) {
+    classes.add(clazz);
+  }
+
+  public ProductivityMap[] produce(Date date, Attendant attendant) {
+    ProductivityMap[] maps = new ProductivityMap[classes.size()];
+    int i = 0;
+    for (Class<? extends ProductivityMap> clazz : classes) {
+      ParametersList list = parameters.getParametersList(clazz);
+      maps[i] = allFactories.get(clazz).construct(list, date, attendant);
+      i++;
     }
     return maps;
   }
 
   static interface Factory {
 
-    public ProductivityMap construct(Date date, Attendant attendant);
+    public ProductivityMap construct(ParametersList parameters, Date date, Attendant attendant);
 
   }
 

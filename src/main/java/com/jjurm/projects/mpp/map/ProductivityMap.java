@@ -3,6 +3,7 @@ package com.jjurm.projects.mpp.map;
 import java.util.Date;
 
 import com.jjurm.projects.mpp.model.Attendant;
+import com.jjurm.projects.mpp.model.Parameters.ParametersList;
 import com.jjurm.projects.mpp.model.Place;
 
 /**
@@ -14,10 +15,12 @@ import com.jjurm.projects.mpp.model.Place;
  */
 public abstract class ProductivityMap {
 
+  protected ParametersList parameters;
   protected Date date;
   protected Attendant attendant;
 
-  public ProductivityMap(Date date, Attendant attendant) {
+  public ProductivityMap(ParametersList parameters, Date date, Attendant attendant) {
+    this.parameters = parameters;
     this.date = date;
     this.attendant = attendant;
   }

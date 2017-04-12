@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Map;
 import java.util.TreeSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -17,6 +18,7 @@ import java.util.concurrent.Executors;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -28,14 +30,22 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.jjurm.projects.mpp.algorithm.Algorithm;
 import com.jjurm.projects.mpp.algorithm.Algorithm.Result;
 import com.jjurm.projects.mpp.algorithm.DiscreteAlgorithm;
 import com.jjurm.projects.mpp.db.DatabaseManager;
 import com.jjurm.projects.mpp.db.PlaceFinder;
 import com.jjurm.projects.mpp.db.PlaceFinder.NotFoundException;
+import com.jjurm.projects.mpp.map.ProductivityMap;
+import com.jjurm.projects.mpp.map.ProductivityMapsFactory;
 import com.jjurm.projects.mpp.model.Attendant;
+import com.jjurm.projects.mpp.model.Parameters;
+import com.jjurm.projects.mpp.model.Parameters.ParametersList;
 import com.jjurm.projects.mpp.model.Place;
+import com.jjurm.projects.mpp.util.Holder;
 
 public class Application {
 
@@ -44,6 +54,8 @@ public class Application {
   DefaultListModel<Attendant> attendants = new DefaultListModel<Attendant>();
   DefaultTableModel results = new DefaultTableModel(Result.tableColumns, 0);
   Algorithm algorithm;
+  Parameters parameters;
+  ArrayList<Pair<JTextField, Holder<Double>>> parameterBindings = new ArrayList<>();
 
   private JFrame frame;
   private JTextField textDate;
@@ -63,8 +75,8 @@ public class Application {
       public void run() {
         try {
           Application window = new Application();
-          window.frame.setVisible(true);
           window.frame.setTitle("Meeting point planner");
+          window.frame.setVisible(true);
           window.textOrigin.requestFocus();
         } catch (Exception e) {
           e.printStackTrace();
@@ -85,7 +97,7 @@ public class Application {
    */
   private void initialize() {
     frame = new JFrame();
-    frame.setBounds(100, 100, 522, 322);
+    frame.setBounds(100, 100, 833, 444);
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     JPanel panelMain = new JPanel();
@@ -159,23 +171,67 @@ public class Application {
 
     algorithm = new DiscreteAlgorithm(10, d -> progressBar.setValue((int) (d * 1000)));
 
+    JPanel panelResult = new JPanel();
+    panelResult.setBounds(429, 11, 370, 383);
+    panelResult.setBorder(BorderFactory.createTitledBorder("Result"));
+    panelMain.add(panelResult);
+    panelResult.setLayout(null);
+
     JButton btnCalculate = new JButton("Compute");
+    btnCalculate.setBounds(20, 24, 89, 23);
+    panelResult.add(btnCalculate);
     btnCalculate.addActionListener(e -> executor.submit(this::compute));
-    btnCalculate.setBounds(214, 11, 89, 23);
-    panelMain.add(btnCalculate);
+
+    progressBar = new JProgressBar();
+    progressBar.setBounds(119, 28, 226, 14);
+    panelResult.add(progressBar);
+    progressBar.setMinimum(0);
+    progressBar.setMaximum(1000);
 
     tableResults = new JTable();
     tableResults.setModel(results);
 
     JScrollPane scrollResults = new JScrollPane(tableResults);
-    scrollResults.setBounds(214, 45, 282, 228);
-    panelMain.add(scrollResults);
+    scrollResults.setBounds(20, 59, 325, 298);
+    panelResult.add(scrollResults);
 
-    progressBar = new JProgressBar();
-    progressBar.setBounds(313, 20, 183, 14);
-    progressBar.setMinimum(0);
-    progressBar.setMaximum(1000);
-    panelMain.add(progressBar);
+    JPanel panelParams = new JPanel();
+    panelParams.setBounds(214, 11, 205, 383);
+    panelParams.setBorder(BorderFactory.createTitledBorder("Parameters"));
+    panelMain.add(panelParams);
+    panelParams.setLayout(null);
+
+    parameters = new Parameters();
+
+    int positionY = 18;
+    for (Map.Entry<Class<? extends ProductivityMap>, ParametersList> entry : parameters
+        .entrySet()) {
+      String name = entry.getKey().getSimpleName();
+      ParametersList parameters = entry.getValue();
+
+      final JCheckBox chckbx = new JCheckBox(name);
+      chckbx.setBounds(6, positionY, 150, 23);
+      positionY += 30;
+      chckbx.setSelected(parameters.getUseThisMap());
+      chckbx.addActionListener(e -> parameters.setUseThisMap(chckbx.isSelected()));
+      panelParams.add(chckbx);
+
+      for (Map.Entry<String, Holder<Double>> parameter : parameters.entrySet()) {
+        final JLabel label = new JLabel(parameter.getKey());
+        label.setBounds(32, positionY, 59, 14);
+        panelParams.add(label);
+
+        final JTextField textField = new JTextField();
+        textField.setBounds(100, positionY - 3, 86, 20);
+        textField.setColumns(10);
+        textField.setText(parameter.getValue().get().toString());
+        parameterBindings
+            .add(new ImmutablePair<JTextField, Holder<Double>>(textField, parameter.getValue()));
+        panelParams.add(textField);
+
+        positionY += 30;
+      }
+    }
 
   }
 
@@ -197,18 +253,46 @@ public class Application {
 
   private void compute() {
     try {
-      SimpleDateFormat parser = new SimpleDateFormat("yyyyMMdd");
-      Date date = parser.parse(textDate.getText());
-      ArrayList<Attendant> ats = Collections.list(attendants.elements());
 
-      TreeSet<Result> resultSet = algorithm.find(date, ats.toArray(new Attendant[0]));
-      while (results.getRowCount() > 0)
-        results.removeRow(0);
-      for (Result r : resultSet) {
-        results.addRow(r.getTableRow());
+      for (Pair<JTextField, Holder<Double>> binding : parameterBindings) {
+        try {
+          Double value = Double.parseDouble(binding.getLeft().getText());
+          binding.getRight().set(value);
+        } catch (NumberFormatException e) {
+          e.printStackTrace();
+          return;
+        }
       }
-    } catch (ParseException e1) {
-      e1.printStackTrace();
+
+      ProductivityMapsFactory mapsFactory = new ProductivityMapsFactory(parameters);
+      for (Map.Entry<Class<? extends ProductivityMap>, ParametersList> entry : parameters
+          .entrySet()) {
+        ParametersList list = entry.getValue();
+        if (list.getUseThisMap()) {
+          Class<? extends ProductivityMap> clazz = entry.getKey();
+          mapsFactory.addFactory(clazz);
+        }
+      }
+
+      try {
+        SimpleDateFormat parser = new SimpleDateFormat("yyyyMMdd");
+        Date date = parser.parse(textDate.getText());
+        ArrayList<Attendant> ats = Collections.list(attendants.elements());
+
+        TreeSet<Result> resultSet =
+            algorithm.find(date, ats.toArray(new Attendant[0]), mapsFactory);
+        Object[][] rows = new Object[resultSet.size()][];
+        int i = 0;
+        for (Result r : resultSet) {
+          rows[i] = r.getTableRow();
+          i++;
+        }
+        results.setDataVector(rows, Result.tableColumns);
+      } catch (ParseException e1) {
+        e1.printStackTrace();
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
     }
   }
 }

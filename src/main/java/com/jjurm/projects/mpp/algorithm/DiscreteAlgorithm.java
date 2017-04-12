@@ -32,14 +32,15 @@ public class DiscreteAlgorithm extends Algorithm {
   }
 
   @Override
-  public TreeSet<Algorithm.Result> find(Date date, Attendant[] attendants) {
+  public TreeSet<Algorithm.Result> find(Date date, Attendant[] attendants,
+      ProductivityMapsFactory mapsFactory) {
 
     updateProgress(0);
 
     ProductivityMap[][] maps = new ProductivityMap[attendants.length][];
 
     for (int i = 0; i < attendants.length; i++) {
-      maps[i] = ProductivityMapsFactory.produce(date, attendants[i]);
+      maps[i] = mapsFactory.produce(date, attendants[i]);
     }
 
     TreeSet<Algorithm.Result> results =
@@ -52,7 +53,6 @@ public class DiscreteAlgorithm extends Algorithm {
               return o1.getProductivitySum() < o2.getProductivitySum() ? 1 : -1;
           }
         });
-
 
     String query = PlaceFinder.QUERY_BASE;
     int rowCount, row = 0;

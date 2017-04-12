@@ -3,23 +3,26 @@ package com.jjurm.projects.mpp.map;
 import java.util.Date;
 
 import com.jjurm.projects.mpp.model.Attendant;
+import com.jjurm.projects.mpp.model.Parameters.ParametersList;
 import com.jjurm.projects.mpp.model.Place;
 
 public class JetLagMap extends ProductivityMap {
 
-  public static final double PM = 0.7;
+  public static final String PARAM_PM = "P_M";
 
   public static final double LE = 0.7;
   public static final double LW = 0.7;
 
-  public JetLagMap(Date date, Attendant attendant) {
-    super(date, attendant);
+  public JetLagMap(ParametersList parameters, Date date, Attendant attendant) {
+    super(parameters, date, attendant);
   }
 
   @Override
   public double calculateProductivity(Place destination, int day) {
-    double pw = PM * Math.sqrt(LE / LW);
-    double pe = PM * Math.sqrt(LW / LE);
+    double pm = parameters.get(PARAM_PM);
+
+    double pw = pm * Math.sqrt(LE / LW);
+    double pe = pm * Math.sqrt(LW / LE);
 
     int offset1 = attendant.getOrigin().getTimeZone().getOffset(date.getTime());
     int offset2 = destination.getTimeZone().getOffset(date.getTime());

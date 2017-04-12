@@ -3,6 +3,7 @@ package com.jjurm.projects.mpp.algorithm;
 import java.util.Date;
 import java.util.TreeSet;
 
+import com.jjurm.projects.mpp.map.ProductivityMapsFactory;
 import com.jjurm.projects.mpp.model.Attendant;
 import com.jjurm.projects.mpp.model.Place;
 
@@ -14,7 +15,8 @@ public abstract class Algorithm {
     this.resultCount = resultCount;
   }
 
-  public abstract TreeSet<Result> find(Date date, Attendant[] attendants);
+  public abstract TreeSet<Result> find(Date date, Attendant[] attendants,
+      ProductivityMapsFactory mapsFactory);
 
   public static class Result {
 

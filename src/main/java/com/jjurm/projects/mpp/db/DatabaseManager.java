@@ -13,7 +13,7 @@ public class DatabaseManager {
   private static ConnectionPool pool;
 
   public static void init() {
-    pool = new ConnectionPool("pool", 3, 3, 1000, URL, null);
+    pool = new ConnectionPool("pool", 1, 3, 3, 0, URL, null);
   }
 
   public static void release() {
