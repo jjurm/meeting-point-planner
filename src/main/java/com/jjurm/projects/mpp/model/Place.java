@@ -41,12 +41,12 @@ public class Place {
     return altitude;
   }
 
-  public double[] getTemperature() {
-    return temperature;
+  public double getTemperature(int month) {
+    return temperature[month];
   }
 
-  public double[] getPrecipitation() {
-    return precipitation;
+  public double getPrecipitation(int month) {
+    return precipitation[month];
   }
 
   @Override

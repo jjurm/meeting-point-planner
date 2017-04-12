@@ -15,8 +15,11 @@ public class DistanceMap extends ProductivityMap {
   public static final double AGE_ELDERLY = 80;
   public static final double MAX_DISTANCE = 20_000_000;
 
+  private double PM;
+
   public DistanceMap(Date date, Attendant attendant) {
     super(date, attendant);
+    PM = PY - (attendant.getAge() - AGE_YOUNG) / (AGE_ELDERLY - AGE_YOUNG) * (PY - PE);
   }
 
   @Override
@@ -26,8 +29,6 @@ public class DistanceMap extends ProductivityMap {
 
     double distance =
         EarthCalc.getHarvesineDistance(attendant.getOrigin().getPoint(), destination.getPoint());
-
-    double PM = PY - (attendant.getAge() - AGE_YOUNG) / (AGE_ELDERLY - AGE_YOUNG) * (PY - PE);
 
     return Math.exp(distance * Math.log(PM) / MAX_DISTANCE);
   }

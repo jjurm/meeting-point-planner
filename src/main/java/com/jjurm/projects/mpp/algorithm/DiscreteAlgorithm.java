@@ -7,6 +7,7 @@ import java.sql.Statement;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.TreeSet;
+import java.util.function.Consumer;
 
 import com.jjurm.projects.mpp.db.DatabaseManager;
 import com.jjurm.projects.mpp.db.PlaceFinder;
@@ -15,14 +16,25 @@ import com.jjurm.projects.mpp.map.ProductivityMapsFactory;
 import com.jjurm.projects.mpp.model.Attendant;
 import com.jjurm.projects.mpp.model.Place;
 
-public class LinearAlgorithm extends Algorithm {
+public class DiscreteAlgorithm extends Algorithm {
 
-  public LinearAlgorithm(int resultCount) {
+  protected Consumer<Double> progressUpdater;
+
+  public DiscreteAlgorithm(int resultCount, Consumer<Double> progressUpdater) {
     super(resultCount);
+    this.progressUpdater = progressUpdater;
+  }
+
+  protected void updateProgress(double progress) {
+    if (progressUpdater != null) {
+      progressUpdater.accept(progress);
+    }
   }
 
   @Override
   public TreeSet<Algorithm.Result> find(Date date, Attendant[] attendants) {
+
+    updateProgress(0);
 
     ProductivityMap[][] maps = new ProductivityMap[attendants.length][];
 
@@ -43,9 +55,14 @@ public class LinearAlgorithm extends Algorithm {
 
 
     String query = PlaceFinder.QUERY_BASE;
+    int rowCount, row = 0;
     try (Connection conn = DatabaseManager.getConnection();
         Statement stmt = conn.createStatement();
         ResultSet result = stmt.executeQuery(query);) {
+
+      result.last();
+      rowCount = result.getRow();
+      result.beforeFirst();
 
       double sum, productivity;
 
@@ -71,6 +88,9 @@ public class LinearAlgorithm extends Algorithm {
           results.pollLast();
           results.add(r);
         }
+
+        row++;
+        updateProgress(((double) row) / rowCount);
 
       }
 

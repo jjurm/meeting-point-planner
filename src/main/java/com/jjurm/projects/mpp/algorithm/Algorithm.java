@@ -18,6 +18,8 @@ public abstract class Algorithm {
 
   public static class Result {
 
+    public static Object[] tableColumns = {"City", "Productivity"};
+
     private double productivitySum;
     private Place destination;
 
@@ -25,6 +27,10 @@ public abstract class Algorithm {
       super();
       this.productivitySum = productivitySum;
       this.destination = destination;
+    }
+
+    public Object[] getTableRow() {
+      return new Object[] {destination, productivitySum};
     }
 
     public double getProductivitySum() {

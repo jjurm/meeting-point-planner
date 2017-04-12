@@ -16,17 +16,17 @@ public class PlaceFinder {
       "SELECT bigcities.id as id, bigcities.country as country, accent, lat, lon, tz_id, alt, temperature.*, precipitation.* "
           + "FROM bigcities LEFT JOIN countries ON (UPPER(bigcities.country) = countries.alpha2) "
           + "LEFT JOIN temperature ON (countries.alpha3 = temperature.country) LEFT JOIN precipitation ON (countries.alpha3 = precipitation.country) "
-          + "WHERE tz_id is not null";
+          + "WHERE tz_id is not null and bigcities.ign = 0";
 
-  public static Place id(int id) {
+  public static Place id(int id) throws NotFoundException, SQLException {
     return query("id = " + id);
   }
 
-  public static Place city(String city) {
+  public static Place city(String city) throws NotFoundException, SQLException {
     return query("city like '%" + city + "%'");
   }
 
-  public static Place accent(String accent) {
+  public static Place accent(String accent) throws NotFoundException, SQLException {
     return query("accent like '%" + accent + "%'");
   }
 
@@ -71,7 +71,7 @@ public class PlaceFinder {
     return place;
   }
 
-  protected static Place query(String condition) {
+  protected static Place query(String condition) throws NotFoundException, SQLException {
     String query = QUERY_BASE + " AND " + condition + " ORDER BY population DESC LIMIT 1";
     try (Connection conn = DatabaseManager.getConnection();
         Statement stmt = conn.createStatement();
@@ -79,10 +79,14 @@ public class PlaceFinder {
       if (result.first()) {
         return fromResultSet(result);
       } else {
-        throw new RuntimeException("Place not found (" + condition + ")");
+        throw new NotFoundException("Place not found (" + condition + ")");
       }
-    } catch (SQLException e1) {
-      throw new RuntimeException("Place not found", e1);
+    }
+  }
+
+  public static class NotFoundException extends Exception {
+    public NotFoundException(String s) {
+      super(s);
     }
   }
 
