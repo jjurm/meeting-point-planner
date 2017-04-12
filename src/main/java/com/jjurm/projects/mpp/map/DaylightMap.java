@@ -25,7 +25,7 @@ public class DaylightMap extends ProductivityMap {
 
     Calendar calendar = Calendar.getInstance();
     calendar.setTime(date);
-    int dayOfYear = calendar.get(Calendar.DAY_OF_YEAR) + day;
+    int dayOfYear = (calendar.get(Calendar.DAY_OF_YEAR) + day) % 366;
     double declination = cache.getValue(dayOfYear) * Math.PI / 180;
 
     double h = Math.acos(-Math.tan(phi) * Math.tan(declination)) / (2 * Math.PI);

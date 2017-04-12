@@ -25,7 +25,7 @@ public class Attendant {
 
   @Override
   public String toString() {
-    return "Attendant from " + origin;
+    return origin + " (" + ((int) age) + ")";
   }
 
 }
