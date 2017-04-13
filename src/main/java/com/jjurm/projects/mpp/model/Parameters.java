@@ -8,8 +8,8 @@ import java.util.function.Consumer;
 import com.jjurm.projects.mpp.map.AltitudeMap;
 import com.jjurm.projects.mpp.map.DaylightMap;
 import com.jjurm.projects.mpp.map.DistanceMap;
-import com.jjurm.projects.mpp.map.IsHomeMap;
 import com.jjurm.projects.mpp.map.JetLagMap;
+import com.jjurm.projects.mpp.map.PrecipitationMap;
 import com.jjurm.projects.mpp.map.ProductivityMap;
 import com.jjurm.projects.mpp.map.TemperatureMap;
 import com.jjurm.projects.mpp.util.Holder;
@@ -25,6 +25,7 @@ public class Parameters {
     lists.put(DistanceMap.class, new ParametersList(true, p -> {
       p.put(DistanceMap.PARAM_PY, h(0.9));
       p.put(DistanceMap.PARAM_PE, h(0.7));
+      p.put(DistanceMap.PARAM_PP, h(0.2));
     }));
     lists.put(AltitudeMap.class, new ParametersList(true, p -> {
     }));
@@ -34,10 +35,12 @@ public class Parameters {
     lists.put(TemperatureMap.class, new ParametersList(true, p -> {
       p.put(TemperatureMap.PARAM_KT, h(0.05));
     }));
-
-    lists.put(IsHomeMap.class, new ParametersList(false, p -> {
-      p.put(IsHomeMap.PARAM_P, h(0.99));
+    lists.put(PrecipitationMap.class, new ParametersList(true, p -> {
     }));
+
+    /*-lists.put(IsHomeMap.class, new ParametersList(false, p -> {
+      p.put(IsHomeMap.PARAM_P, h(0.99));
+    }));*/
   }
 
   private static Holder<Double> h(double value) {

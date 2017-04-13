@@ -15,6 +15,7 @@ public class DistanceMap extends ProductivityMap {
 
   public static final String PARAM_PY = "P_Y (" + ((int) AGE_YOUNG) + ")";
   public static final String PARAM_PE = "P_E (" + ((int) AGE_ELDERLY) + ")";
+  public static final String PARAM_PP = "P_P";
 
   private double PM;
 
@@ -33,6 +34,10 @@ public class DistanceMap extends ProductivityMap {
     double distance =
         EarthCalc.getHarvesineDistance(attendant.getOrigin().getPoint(), destination.getPoint());
 
-    return Math.exp(distance * Math.log(PM) / MAX_DISTANCE);
+    double popAddition =
+        parameters.get(PARAM_PP) * Math.sqrt(destination.getPopulation()) / 1000000;
+
+    double P = Math.exp(distance * Math.log(PM) / MAX_DISTANCE) + popAddition;
+    return P;
   }
 }

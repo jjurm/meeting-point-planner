@@ -97,7 +97,7 @@ public class Application {
    */
   private void initialize() {
     frame = new JFrame();
-    frame.setBounds(100, 100, 833, 444);
+    frame.setBounds(100, 100, 940, 527);
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     JPanel panelMain = new JPanel();
@@ -105,18 +105,18 @@ public class Application {
     panelMain.setLayout(null);
 
     JPanel panelInput = new JPanel();
-    panelInput.setBounds(10, 11, 194, 262);
+    panelInput.setBounds(10, 11, 309, 415);
     panelInput.setBorder(BorderFactory.createTitledBorder("Input"));
     panelMain.add(panelInput);
     panelInput.setLayout(null);
 
-    JLabel lblDate = new JLabel("Date:");
-    lblDate.setBounds(10, 21, 46, 14);
+    JLabel lblDate = new JLabel("Date (YYYYMMDD):");
+    lblDate.setBounds(10, 21, 94, 14);
     panelInput.add(lblDate);
 
     textDate = new JTextField();
-    textDate.setText("20170412");
-    textDate.setBounds(66, 18, 114, 20);
+    textDate.setText("20170815");
+    textDate.setBounds(114, 18, 78, 20);
     panelInput.add(textDate);
     textDate.setColumns(10);
 
@@ -129,31 +129,31 @@ public class Application {
     list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
     JScrollPane scrollAttendants = new JScrollPane(list);
-    scrollAttendants.setBounds(10, 71, 170, 94);
+    scrollAttendants.setBounds(10, 71, 289, 249);
     panelInput.add(scrollAttendants);
 
     JLabel lblOrigin = new JLabel("Origin:");
-    lblOrigin.setBounds(10, 176, 46, 14);
+    lblOrigin.setBounds(10, 331, 46, 14);
     panelInput.add(lblOrigin);
 
     textOrigin = new JTextField();
-    textOrigin.setBounds(66, 173, 114, 20);
+    textOrigin.setBounds(66, 328, 114, 20);
     panelInput.add(textOrigin);
     textOrigin.setColumns(10);
 
     JLabel lblAge = new JLabel("Age:");
-    lblAge.setBounds(10, 201, 46, 14);
+    lblAge.setBounds(10, 356, 46, 14);
     panelInput.add(lblAge);
 
     textAge = new JTextField();
-    textAge.setBounds(66, 198, 114, 20);
+    textAge.setBounds(66, 353, 114, 20);
     textAge.addActionListener(this::addAttendant);
     panelInput.add(textAge);
     textAge.setColumns(10);
 
     JButton btnAdd = new JButton("Add");
     btnAdd.addActionListener(this::addAttendant);
-    btnAdd.setBounds(10, 226, 78, 23);
+    btnAdd.setBounds(10, 381, 78, 23);
     panelInput.add(btnAdd);
 
     JButton btnRemove = new JButton("Remove");
@@ -166,13 +166,13 @@ public class Application {
         }
       }
     });
-    btnRemove.setBounds(94, 226, 86, 23);
+    btnRemove.setBounds(94, 381, 86, 23);
     panelInput.add(btnRemove);
 
     algorithm = new DiscreteAlgorithm(10, d -> progressBar.setValue((int) (d * 1000)));
 
     JPanel panelResult = new JPanel();
-    panelResult.setBounds(429, 11, 370, 383);
+    panelResult.setBounds(544, 11, 370, 383);
     panelResult.setBorder(BorderFactory.createTitledBorder("Result"));
     panelMain.add(panelResult);
     panelResult.setLayout(null);
@@ -196,7 +196,7 @@ public class Application {
     panelResult.add(scrollResults);
 
     JPanel panelParams = new JPanel();
-    panelParams.setBounds(214, 11, 205, 383);
+    panelParams.setBounds(329, 11, 205, 415);
     panelParams.setBorder(BorderFactory.createTitledBorder("Parameters"));
     panelMain.add(panelParams);
     panelParams.setLayout(null);
@@ -207,6 +207,7 @@ public class Application {
     for (Map.Entry<Class<? extends ProductivityMap>, ParametersList> entry : parameters
         .entrySet()) {
       String name = entry.getKey().getSimpleName();
+      name = name.substring(0, name.length() - 3);
       ParametersList parameters = entry.getValue();
 
       final JCheckBox chckbx = new JCheckBox(name);
@@ -252,47 +253,51 @@ public class Application {
   }
 
   private void compute() {
-    try {
-
-      for (Pair<JTextField, Holder<Double>> binding : parameterBindings) {
-        try {
-          Double value = Double.parseDouble(binding.getLeft().getText());
-          binding.getRight().set(value);
-        } catch (NumberFormatException e) {
-          e.printStackTrace();
-          return;
-        }
-      }
-
-      ProductivityMapsFactory mapsFactory = new ProductivityMapsFactory(parameters);
-      for (Map.Entry<Class<? extends ProductivityMap>, ParametersList> entry : parameters
-          .entrySet()) {
-        ParametersList list = entry.getValue();
-        if (list.getUseThisMap()) {
-          Class<? extends ProductivityMap> clazz = entry.getKey();
-          mapsFactory.addFactory(clazz);
-        }
-      }
-
+    if (attendants.size() > 0) {
       try {
-        SimpleDateFormat parser = new SimpleDateFormat("yyyyMMdd");
-        Date date = parser.parse(textDate.getText());
-        ArrayList<Attendant> ats = Collections.list(attendants.elements());
 
-        TreeSet<Result> resultSet =
-            algorithm.find(date, ats.toArray(new Attendant[0]), mapsFactory);
-        Object[][] rows = new Object[resultSet.size()][];
-        int i = 0;
-        for (Result r : resultSet) {
-          rows[i] = r.getTableRow();
-          i++;
+        for (Pair<JTextField, Holder<Double>> binding : parameterBindings) {
+          try {
+            Double value = Double.parseDouble(binding.getLeft().getText());
+            binding.getRight().set(value);
+          } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return;
+          }
         }
-        results.setDataVector(rows, Result.tableColumns);
-      } catch (ParseException e1) {
-        e1.printStackTrace();
+
+        ProductivityMapsFactory mapsFactory = new ProductivityMapsFactory(parameters);
+        for (Map.Entry<Class<? extends ProductivityMap>, ParametersList> entry : parameters
+            .entrySet()) {
+          ParametersList list = entry.getValue();
+          if (list.getUseThisMap()) {
+            Class<? extends ProductivityMap> clazz = entry.getKey();
+            mapsFactory.addFactory(clazz);
+          }
+        }
+
+        try {
+          SimpleDateFormat parser = new SimpleDateFormat("yyyyMMdd");
+          Date date = parser.parse(textDate.getText());
+          ArrayList<Attendant> ats = Collections.list(attendants.elements());
+
+          TreeSet<Result> resultSet =
+              algorithm.find(date, ats.toArray(new Attendant[0]), mapsFactory);
+          Object[][] rows = new Object[resultSet.size()][];
+          int i = 0;
+          for (Result r : resultSet) {
+            rows[i] = r.getTableRow();
+            i++;
+          }
+          results.setDataVector(rows, Result.tableColumns);
+        } catch (ParseException e1) {
+          e1.printStackTrace();
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
       }
-    } catch (Exception e) {
-      e.printStackTrace();
+    } else {
+      System.out.println("No attendants added");
     }
   }
 }

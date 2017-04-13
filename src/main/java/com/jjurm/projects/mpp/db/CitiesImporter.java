@@ -39,8 +39,6 @@ public class CitiesImporter {
 
   public static void importCities() {
 
-    /*-String insertStatement =
-        "INSERT INTO `cities`(`country`, `city`, `accent`, `region`, `population`, `lat`, `lon`) VALUES (?, ?, ?, ?, ?, ?, ?)";*/
     String insert2Statement =
         "INSERT INTO `bigcities`(`country`, `city`, `accent`, `region`, `population`, `lat`, `lon`) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
@@ -53,8 +51,7 @@ public class CitiesImporter {
 
       conn.setAutoCommit(false);
 
-      try (/*-PreparedStatement stmt = conn.prepareStatement(insertStatement);*/
-          PreparedStatement stmt2 = conn.prepareStatement(insert2Statement)) {
+      try (PreparedStatement stmt2 = conn.prepareStatement(insert2Statement)) {
 
         for (int i = 0; i < ignoreLines; i++) {
           brCsv.readLine();
@@ -70,19 +67,6 @@ public class CitiesImporter {
           } else {
             population = null;
           }
-
-          /*-stmt.setString(1, parts[0]);
-          stmt.setString(2, parts[1]);
-          stmt.setString(3, parts[2]);
-          stmt.setString(4, parts[3]);
-          if (population != null) {
-            stmt.setInt(5, population);
-          } else {
-            stmt.setNull(5, Types.INTEGER);
-          }
-          stmt.setDouble(6, Double.parseDouble(parts[5]));
-          stmt.setDouble(7, Double.parseDouble(parts[6]));
-          stmt.executeUpdate();*/
 
           if (population != null && population > 50000) {
             stmt2.setString(1, parts[0]);

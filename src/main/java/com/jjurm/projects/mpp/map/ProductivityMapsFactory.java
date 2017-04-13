@@ -20,6 +20,7 @@ public class ProductivityMapsFactory {
           put(DistanceMap.class, DistanceMap::new);
           put(IsHomeMap.class, IsHomeMap::new);
           put(JetLagMap.class, JetLagMap::new);
+          put(PrecipitationMap.class, PrecipitationMap::new);
           put(TemperatureMap.class, TemperatureMap::new);
         }
       };

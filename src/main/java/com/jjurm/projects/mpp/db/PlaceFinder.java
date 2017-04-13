@@ -13,7 +13,7 @@ import com.peertopark.java.geocalc.Point;
 public class PlaceFinder {
 
   public static final String QUERY_BASE =
-      "SELECT bigcities.id as id, bigcities.country as country, accent, lat, lon, tz_id, alt, temperature.*, precipitation.* "
+      "SELECT bigcities.id as id, bigcities.country as country, accent, population, lat, lon, tz_id, alt, countries.name, temperature.*, precipitation.* "
           + "FROM bigcities LEFT JOIN countries ON (UPPER(bigcities.country) = countries.alpha2) "
           + "LEFT JOIN temperature ON (countries.alpha3 = temperature.country) LEFT JOIN precipitation ON (countries.alpha3 = precipitation.country) "
           + "WHERE tz_id is not null and bigcities.ign = 0";
@@ -33,8 +33,10 @@ public class PlaceFinder {
   public static Place fromResultSet(ResultSet result) throws SQLException {
     int id = result.getInt("id");
     String name = result.getString("accent");
+    String country_name = result.getString("countries.name");
     Point point = new Point(new DegreeCoordinate(result.getDouble("lat")),
         new DegreeCoordinate(result.getDouble("lon")));
+    int population = result.getInt("population");
     TimeZone timezone = TimeZone.getTimeZone(result.getString("tz_id"));
     int altitude = result.getInt("alt");
 
@@ -67,7 +69,8 @@ public class PlaceFinder {
     precipitation[11] = result.getDouble("pdec");
     precipitation[12] = result.getDouble("pannual");
 
-    Place place = new Place(id, name, point, timezone, altitude, temperature, precipitation);
+    Place place = new Place(id, name, country_name, point, population, timezone, altitude,
+        temperature, precipitation);
     return place;
   }
 
@@ -85,6 +88,8 @@ public class PlaceFinder {
   }
 
   public static class NotFoundException extends Exception {
+    private static final long serialVersionUID = 1L;
+
     public NotFoundException(String s) {
       super(s);
     }

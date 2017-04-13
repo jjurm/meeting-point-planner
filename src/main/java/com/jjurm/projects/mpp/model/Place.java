@@ -8,17 +8,21 @@ public class Place {
 
   int id;
   private String name;
+  private String country;
   private Point point;
+  private int population;
   private TimeZone timeZone;
   private int altitude;
   private double[] temperature;
   private double[] precipitation;
 
-  public Place(int id, String name, Point point, TimeZone timeZone, int altitude,
-      double[] temperature, double[] precipitation) {
+  public Place(int id, String name, String country, Point point, int population, TimeZone timeZone,
+      int altitude, double[] temperature, double[] precipitation) {
     this.id = id;
     this.name = name;
+    this.country = country;
     this.point = point;
+    this.population = population;
     this.timeZone = timeZone;
     this.altitude = altitude;
     this.temperature = temperature;
@@ -31,6 +35,10 @@ public class Place {
 
   public Point getPoint() {
     return point;
+  }
+
+  public int getPopulation() {
+    return population;
   }
 
   public TimeZone getTimeZone() {
@@ -51,7 +59,7 @@ public class Place {
 
   @Override
   public String toString() {
-    return name;
+    return name + ", " + country;
   }
 
   @Override

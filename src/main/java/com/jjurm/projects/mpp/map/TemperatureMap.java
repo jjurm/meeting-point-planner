@@ -29,7 +29,7 @@ public class TemperatureMap extends ProductivityMap {
   public double calculateProductivity(Place destination, int day) {
     Calendar calendar = Calendar.getInstance();
     calendar.setTime(date);
-    calendar.add(Calendar.DATE, 1);
+    calendar.add(Calendar.DATE, day);
     int month = calendar.get(Calendar.MONTH);
 
     // dry-bulb temperature
