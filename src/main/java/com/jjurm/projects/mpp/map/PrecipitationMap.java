@@ -9,6 +9,8 @@ import com.jjurm.projects.mpp.model.Place;
 
 public class PrecipitationMap extends ProductivityMap {
 
+  public static final String PARAM_K = "K";
+
   public static final double P_DECREASE = 0.01363;
 
   public PrecipitationMap(ParametersList parameters, Date date, Attendant attendant) {
@@ -23,8 +25,9 @@ public class PrecipitationMap extends ProductivityMap {
     int month = calendar.get(Calendar.MONTH);
 
     double x = destination.getPrecipitation(month);
+    double K = parameters.get(PARAM_K);
 
-    double P = Math.pow(1 - P_DECREASE, -Math.sqrt(x) / 25.4);
+    double P = Math.pow(1 - P_DECREASE, -K * Math.sqrt(x) / 25.4);
     return P;
   }
 

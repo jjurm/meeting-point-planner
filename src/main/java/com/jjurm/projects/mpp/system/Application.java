@@ -97,7 +97,7 @@ public class Application {
    */
   private void initialize() {
     frame = new JFrame();
-    frame.setBounds(100, 100, 940, 512);
+    frame.setBounds(100, 100, 940, 550);
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     JPanel panelMain = new JPanel();
@@ -105,7 +105,7 @@ public class Application {
     panelMain.setLayout(null);
 
     JPanel panelInput = new JPanel();
-    panelInput.setBounds(10, 11, 309, 450);
+    panelInput.setBounds(10, 11, 309, 489);
     panelInput.setBorder(BorderFactory.createTitledBorder("Input"));
     panelMain.add(panelInput);
     panelInput.setLayout(null);
@@ -172,7 +172,7 @@ public class Application {
     algorithm = new DiscreteAlgorithm(10, d -> progressBar.setValue((int) (d * 1000)));
 
     JPanel panelResult = new JPanel();
-    panelResult.setBounds(544, 11, 370, 450);
+    panelResult.setBounds(544, 11, 370, 489);
     panelResult.setBorder(BorderFactory.createTitledBorder("Result"));
     panelMain.add(panelResult);
     panelResult.setLayout(null);
@@ -192,11 +192,11 @@ public class Application {
     tableResults.setModel(results);
 
     JScrollPane scrollResults = new JScrollPane(tableResults);
-    scrollResults.setBounds(20, 59, 325, 315);
+    scrollResults.setBounds(20, 59, 325, 353);
     panelResult.add(scrollResults);
 
     JPanel panelParams = new JPanel();
-    panelParams.setBounds(329, 11, 205, 450);
+    panelParams.setBounds(329, 11, 205, 489);
     panelParams.setBorder(BorderFactory.createTitledBorder("Parameters"));
     panelMain.add(panelParams);
     panelParams.setLayout(null);

@@ -27,7 +27,7 @@ public class Parameters {
     lists.put(DistanceMap.class, new ParametersList(true, p -> {
       p.put(DistanceMap.PARAM_PY, h(0.9));
       p.put(DistanceMap.PARAM_PE, h(0.7));
-      p.put(DistanceMap.PARAM_PP, h(0.2));
+      p.put(DistanceMap.PARAM_PP, h(0.3));
     }));
     lists.put(AltitudeMap.class, new ParametersList(true, p -> {
     }));
@@ -44,11 +44,8 @@ public class Parameters {
       p.put(QualityOfLifeMap.PARAM_P_MIN, h(0.92));
     }));
     lists.put(PrecipitationMap.class, new ParametersList(true, p -> {
+      p.put(PrecipitationMap.PARAM_K, h(0.5));
     }));
-
-    /*-lists.put(IsHomeMap.class, new ParametersList(false, p -> {
-      p.put(IsHomeMap.PARAM_P, h(0.99));
-    }));*/
   }
 
   private static Holder<Double> h(double value) {
