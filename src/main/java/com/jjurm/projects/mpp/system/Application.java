@@ -97,7 +97,7 @@ public class Application {
    */
   private void initialize() {
     frame = new JFrame();
-    frame.setBounds(100, 100, 940, 527);
+    frame.setBounds(100, 100, 940, 512);
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     JPanel panelMain = new JPanel();
@@ -105,7 +105,7 @@ public class Application {
     panelMain.setLayout(null);
 
     JPanel panelInput = new JPanel();
-    panelInput.setBounds(10, 11, 309, 415);
+    panelInput.setBounds(10, 11, 309, 450);
     panelInput.setBorder(BorderFactory.createTitledBorder("Input"));
     panelMain.add(panelInput);
     panelInput.setLayout(null);
@@ -172,7 +172,7 @@ public class Application {
     algorithm = new DiscreteAlgorithm(10, d -> progressBar.setValue((int) (d * 1000)));
 
     JPanel panelResult = new JPanel();
-    panelResult.setBounds(544, 11, 370, 383);
+    panelResult.setBounds(544, 11, 370, 450);
     panelResult.setBorder(BorderFactory.createTitledBorder("Result"));
     panelMain.add(panelResult);
     panelResult.setLayout(null);
@@ -192,11 +192,11 @@ public class Application {
     tableResults.setModel(results);
 
     JScrollPane scrollResults = new JScrollPane(tableResults);
-    scrollResults.setBounds(20, 59, 325, 298);
+    scrollResults.setBounds(20, 59, 325, 315);
     panelResult.add(scrollResults);
 
     JPanel panelParams = new JPanel();
-    panelParams.setBounds(329, 11, 205, 415);
+    panelParams.setBounds(329, 11, 205, 450);
     panelParams.setBorder(BorderFactory.createTitledBorder("Parameters"));
     panelMain.add(panelParams);
     panelParams.setLayout(null);
@@ -204,6 +204,7 @@ public class Application {
     parameters = new Parameters();
 
     int positionY = 18;
+    int additionY = 26;
     for (Map.Entry<Class<? extends ProductivityMap>, ParametersList> entry : parameters
         .entrySet()) {
       String name = entry.getKey().getSimpleName();
@@ -212,7 +213,7 @@ public class Application {
 
       final JCheckBox chckbx = new JCheckBox(name);
       chckbx.setBounds(6, positionY, 150, 23);
-      positionY += 30;
+      positionY += additionY;
       chckbx.setSelected(parameters.getUseThisMap());
       chckbx.addActionListener(e -> parameters.setUseThisMap(chckbx.isSelected()));
       panelParams.add(chckbx);
@@ -230,7 +231,7 @@ public class Application {
             .add(new ImmutablePair<JTextField, Holder<Double>>(textField, parameter.getValue()));
         panelParams.add(textField);
 
-        positionY += 30;
+        positionY += additionY;
       }
     }
 

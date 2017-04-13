@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.TimeZone;
 
+import com.jjurm.projects.mpp.map.PollutionMap;
+import com.jjurm.projects.mpp.map.QualityOfLifeMap;
 import com.jjurm.projects.mpp.model.Place;
 import com.peertopark.java.geocalc.DegreeCoordinate;
 import com.peertopark.java.geocalc.Point;
@@ -13,9 +15,9 @@ import com.peertopark.java.geocalc.Point;
 public class PlaceFinder {
 
   public static final String QUERY_BASE =
-      "SELECT bigcities.id as id, bigcities.country as country, accent, population, lat, lon, tz_id, alt, countries.name, temperature.*, precipitation.* "
+      "SELECT bigcities.id as id, bigcities.country as country, accent, population, lat, lon, tz_id, alt, countries.name, temperature.*, precipitation.*, pollution.pollution as pollution, qol.qol as qol "
           + "FROM bigcities LEFT JOIN countries ON (UPPER(bigcities.country) = countries.alpha2) "
-          + "LEFT JOIN temperature ON (countries.alpha3 = temperature.country) LEFT JOIN precipitation ON (countries.alpha3 = precipitation.country) "
+          + "LEFT JOIN temperature ON (countries.alpha3 = temperature.country) LEFT JOIN precipitation ON (countries.alpha3 = precipitation.country) LEFT JOIN pollution ON (countries.name = pollution.country) LEFT JOIN qol ON (countries.name = qol.country) "
           + "WHERE tz_id is not null and bigcities.ign = 0";
 
   public static Place id(int id) throws NotFoundException, SQLException {
@@ -68,9 +70,17 @@ public class PlaceFinder {
     precipitation[10] = result.getDouble("pnov");
     precipitation[11] = result.getDouble("pdec");
     precipitation[12] = result.getDouble("pannual");
+    double pollution = result.getDouble("pollution");
+    if (result.wasNull()) {
+      pollution = PollutionMap.getMeanPollution();
+    }
+    double qol = result.getDouble("qol");
+    if (result.wasNull()) {
+      qol = QualityOfLifeMap.getMeanQOL();
+    }
 
     Place place = new Place(id, name, country_name, point, population, timezone, altitude,
-        temperature, precipitation);
+        temperature, precipitation, pollution, qol);
     return place;
   }
 

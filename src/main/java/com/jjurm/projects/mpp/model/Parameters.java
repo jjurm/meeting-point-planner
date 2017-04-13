@@ -9,8 +9,10 @@ import com.jjurm.projects.mpp.map.AltitudeMap;
 import com.jjurm.projects.mpp.map.DaylightMap;
 import com.jjurm.projects.mpp.map.DistanceMap;
 import com.jjurm.projects.mpp.map.JetLagMap;
+import com.jjurm.projects.mpp.map.PollutionMap;
 import com.jjurm.projects.mpp.map.PrecipitationMap;
 import com.jjurm.projects.mpp.map.ProductivityMap;
+import com.jjurm.projects.mpp.map.QualityOfLifeMap;
 import com.jjurm.projects.mpp.map.TemperatureMap;
 import com.jjurm.projects.mpp.util.Holder;
 
@@ -34,6 +36,12 @@ public class Parameters {
     }));
     lists.put(TemperatureMap.class, new ParametersList(true, p -> {
       p.put(TemperatureMap.PARAM_KT, h(0.05));
+    }));
+    lists.put(PollutionMap.class, new ParametersList(true, p -> {
+      p.put(PollutionMap.PARAM_P_MIN, h(0.96));
+    }));
+    lists.put(QualityOfLifeMap.class, new ParametersList(true, p -> {
+      p.put(QualityOfLifeMap.PARAM_P_MIN, h(0.92));
     }));
     lists.put(PrecipitationMap.class, new ParametersList(true, p -> {
     }));

@@ -15,9 +15,11 @@ public class Place {
   private int altitude;
   private double[] temperature;
   private double[] precipitation;
+  private double pollution;
+  private double qol;
 
   public Place(int id, String name, String country, Point point, int population, TimeZone timeZone,
-      int altitude, double[] temperature, double[] precipitation) {
+      int altitude, double[] temperature, double[] precipitation, double pollution, double qol) {
     this.id = id;
     this.name = name;
     this.country = country;
@@ -27,6 +29,8 @@ public class Place {
     this.altitude = altitude;
     this.temperature = temperature;
     this.precipitation = precipitation;
+    this.pollution = pollution;
+    this.qol = qol;
   }
 
   public int getId() {
@@ -55,6 +59,14 @@ public class Place {
 
   public double getPrecipitation(int month) {
     return precipitation[month];
+  }
+
+  public double getPollution() {
+    return pollution;
+  }
+
+  public double getQualityOfLife() {
+    return qol;
   }
 
   @Override
